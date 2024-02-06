@@ -21,11 +21,11 @@ export const RoomProvider = ({ children }: Props) => {
     const [microPhoneEnabled, setMicroPhoneEnabled] = useState<boolean>(true);
     const [videoEnabled, setVideoEnabled] = useState<boolean>(true);
 
-    async function media() {
+    async function media(audio: boolean, video: boolean ) {
         try {
             await navigator.mediaDevices.getUserMedia({
-                audio: microPhoneEnabled,
-                video: videoEnabled
+                audio,
+                video
             }).then(stream => {
                 setStream(stream);
             })
@@ -40,7 +40,7 @@ export const RoomProvider = ({ children }: Props) => {
     }, []);
 
     useEffect(() => {
-        media();
+        media(microPhoneEnabled, videoEnabled);
     }, [microPhoneEnabled, videoEnabled])
     return (
         <RoomContext.Provider value={{ me, stream, microPhoneEnabled, setMicroPhoneEnabled, videoEnabled, setVideoEnabled }}>

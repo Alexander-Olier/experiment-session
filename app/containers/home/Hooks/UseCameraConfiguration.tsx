@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { checkMedia } from '../utils/check';
+import { AppContextType, RoomContext } from '@/app/context/RoomContext';
 
 interface State {
   value: string;
 }
 export default function UseCameraConfiguration() {
+  const { videoEnabled, setVideoEnabled } = useContext(RoomContext) as AppContextType;
   const [messageCamera, setMessageCamera] = useState<string>('');
-  const [enabledCamera, setEnabledCamera] = useState<boolean>(true);
   
   useEffect(() => {
     const handleDeviceChange = async ():Promise<void> => {
@@ -20,5 +21,5 @@ export default function UseCameraConfiguration() {
     };
   }, []);
 
-  return { messageCamera, enabledCamera, setEnabledCamera }
+  return { messageCamera, videoEnabled, setVideoEnabled }
 }

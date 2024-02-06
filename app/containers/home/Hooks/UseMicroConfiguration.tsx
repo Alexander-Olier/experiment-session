@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { checkMedia } from '../utils/check';
+import { AppContextType, RoomContext } from '@/app/context/RoomContext';
 
 interface State {
   value: string;
 }
 export default function UseMicroConfiguration() {
   const [messageMicrophone, setMessageMicrophone] = useState<string>('');
-  const [enabledMicrophone, setEnabledMicrophone] = useState<boolean>(true);
-  
+
   useEffect(() => {
-    const handleDeviceChange = async ():Promise<void> => {
+    const handleDeviceChange = async (): Promise<void> => {
       const msg: State = { value: await checkMedia('audio') };
       setMessageMicrophone(msg.value);
     };
@@ -20,5 +20,5 @@ export default function UseMicroConfiguration() {
     };
   }, []);
 
-  return { messageMicrophone, enabledMicrophone, setEnabledMicrophone }
+  return { messageMicrophone }
 }

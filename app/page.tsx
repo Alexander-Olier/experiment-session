@@ -1,4 +1,4 @@
-import Index from "./containers/home/Home"
+import Index from "./home/Index";
 
 export default function Home() {
   return <Index />

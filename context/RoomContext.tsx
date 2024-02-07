@@ -51,9 +51,17 @@ export const RoomProvider = ({ children }: Props) => {
     }
 
     const getUsers = ({ participants }: { participants: string[] }) => {
-        console.log(participants);
+        participants.map((peerId) => {
+            const call = stream && me?.call(peerId, stream);
+            console.log("call", call);
+            call?.on("stream", (userVideoStream: MediaStream) => {
+                console.log({ addPeerAction });
+                dispatch(addPeerAction(peerId, userVideoStream));
+            });
+        });
+        console.log(participants)
     }
-    
+
     const removePeer = ({ peerId }: { peerId: string }) => {
         dispatch(removePeerAction(peerId))
     }

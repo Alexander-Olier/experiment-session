@@ -5,8 +5,8 @@ import Video from './components/Video';
 import { AppContextType, RoomContext } from '@/context/RoomContext';
 
 export default function Index() {
-    const { stream, ws } = useContext(RoomContext) as AppContextType;
-    const joinRoom = () => {ws.emit('create-room')};
+    const { stream, ws, me } = useContext(RoomContext) as AppContextType;
+    const joinRoom = () => { ws.emit('create-room', { peerId: me?.id }) };
     return (
         <main className="h-screen flex items-center justify-center bg-gray-50">
             {/* Navbar */}

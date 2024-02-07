@@ -11,8 +11,10 @@ export default function Page({ params }: { params: { id: string } }) {
     const { ws, me, stream, peers } = useContext(RoomContext) as AppContextType;
 
     useEffect(() => {
-        if (!me) return;
-        ws.emit('join-room', { roomId: id, peerId: me.id })
+        me?.on('open', () => {
+            console.log({ id: me.id })
+            ws.emit('join-room', { roomId: id, peerId: me.id })
+        })
     }, [id, me, ws])
     return (
         <div className='grid grid-cols-4 gap-4'>

@@ -37,7 +37,7 @@ export const RoomProvider = ({ children }: Props) => {
         try {
             await navigator.mediaDevices.getUserMedia({
                 audio,
-                video
+                video: false
             }).then(stream => {
                 setStream(stream);
             })
@@ -50,12 +50,11 @@ export const RoomProvider = ({ children }: Props) => {
         router.push(`/room/${roomId}`);
     }
 
-    const getUsers = ({ participants }: { participants: string[] }) => {
+    const handleUserList = ({ participants }: { participants: string[] }) => {
         participants.map((peerId) => {
             const call = stream && me?.call(peerId, stream);
-            console.log("call", call);
             call?.on("stream", (userVideoStream: MediaStream) => {
-                console.log({ addPeerAction });
+                console.log('entra');
                 dispatch(addPeerAction(peerId, userVideoStream));
             });
         });
@@ -67,35 +66,38 @@ export const RoomProvider = ({ children }: Props) => {
     }
 
     useEffect(() => {
-        const peer = new Peer(id);
+        const peer = new Peer();
+        peer.connect(id);
         setMe(peer);
+        media(microPhoneEnabled, videoEnabled);
         ws.on('room-created', enterRoom)
-        ws.on('get-users', getUsers)
+        ws.on('get-users', handleUserList)
         ws.on('user-disconnected', removePeer)
     }, []);
 
     useEffect(() => {
-        if (!me) return;
         if (!stream) return;
-        ws.on('user-joined', ({ peerId }) => {
-            const call = me.call(peerId, stream);
-            call.on('stream', (peerStream) => {
-                dispatch(addPeerAction(peerId, peerStream))
+        if (!me) return;
+        ws.on('user-joined', ({ peerId }: { roomId: string; peerId: string }) => {
+            const call = stream && me.call(peerId, stream);
+            call.on("stream", (userVideoStream: MediaStream) => {
+                dispatch(addPeerAction(peerId, userVideoStream));
             });
-        })
+        }
+        );
         me.on('call', (call) => {
             call.answer(stream);
-            call.on('stream', (peerStream) => {
-                dispatch(addPeerAction(call.peer, peerStream))
+            call.on('stream', (userVideoStream) => {
+                dispatch(addPeerAction(call.peer, userVideoStream))
             });
         })
     }, [me, stream])
 
     console.log({ peers })
 
-    useEffect(() => {
-        media(microPhoneEnabled, videoEnabled);
-    }, [microPhoneEnabled, videoEnabled])
+    // useEffect(() => {
+    //     media(microPhoneEnabled, videoEnabled);
+    // }, [microPhoneEnabled, videoEnabled])
 
     return (
         <RoomContext.Provider value={{ ws, me, stream, microPhoneEnabled, setMicroPhoneEnabled, videoEnabled, setVideoEnabled, peers }}>

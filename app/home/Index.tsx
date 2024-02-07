@@ -6,7 +6,10 @@ import { AppContextType, RoomContext } from '@/context/RoomContext';
 
 export default function Index() {
     const { stream, ws, me } = useContext(RoomContext) as AppContextType;
-    const joinRoom = () => { ws.emit('create-room', { peerId: me?.id }) };
+    const joinRoom = () => {
+        console.log(me?.id)
+        ws.emit('create-room', { peerId: me?.id })
+    };
     return (
         <main className="h-screen flex items-center justify-center bg-gray-50">
             {/* Navbar */}

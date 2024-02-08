@@ -33,11 +33,12 @@ export const RoomProvider = ({ children }: Props) => {
     const [videoEnabled, setVideoEnabled] = useState<boolean>(true);
     const [peers, dispatch] = useReducer(peersReducer, {});
 
+
     async function media(audio: boolean, video: boolean) {
         try {
             await navigator.mediaDevices.getUserMedia({
                 audio,
-                video: false
+                video
             }).then(stream => {
                 setStream(stream);
             })
@@ -54,7 +55,6 @@ export const RoomProvider = ({ children }: Props) => {
         participants.map((peerId) => {
             const call = stream && me?.call(peerId, stream);
             call?.on("stream", (userVideoStream: MediaStream) => {
-                console.log('entra');
                 dispatch(addPeerAction(peerId, userVideoStream));
             });
         });
@@ -93,7 +93,7 @@ export const RoomProvider = ({ children }: Props) => {
         })
     }, [me, stream])
 
-    console.log({ peers })
+    console.log({ stream })
 
     // useEffect(() => {
     //     media(microPhoneEnabled, videoEnabled);

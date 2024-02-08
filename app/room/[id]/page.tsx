@@ -19,9 +19,13 @@ export default function Page({ params }: { params: { id: string } }) {
     return (
         <div className='grid grid-cols-4 gap-4'>
             {stream && <Video stream={stream} />}
-            {Object.values(peers).map((peer: any) => {
-                <Video stream={peer.stream} key={peer.id} />
-            })}
+            {peers ? (
+                Object.values(peers).map((peer: any) => (
+                    <Video stream={peer.stream} key={peer.id} />
+                ))
+            ) : (
+                <p>Hi</p>
+            )}
         </div>
     )
 }

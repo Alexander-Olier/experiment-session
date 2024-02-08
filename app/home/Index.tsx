@@ -7,7 +7,6 @@ import { AppContextType, RoomContext } from '@/context/RoomContext';
 export default function Index() {
     const { stream, ws, me } = useContext(RoomContext) as AppContextType;
     const joinRoom = () => {
-        console.log(me?.id)
         ws.emit('create-room', { peerId: me?.id })
     };
     return (

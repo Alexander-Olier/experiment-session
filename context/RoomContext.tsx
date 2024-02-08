@@ -38,7 +38,7 @@ export const RoomProvider = ({ children }: Props) => {
         try {
             await navigator.mediaDevices.getUserMedia({
                 audio,
-                video
+                video: false
             }).then(stream => {
                 setStream(stream);
             })

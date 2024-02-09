@@ -14,7 +14,7 @@ export default function Video({ stream, me }: Props) {
     return (
         <div>
             {
-                stream.getVideoTracks().length > 0 && stream.active ?
+                stream && stream.getVideoTracks().length > 0 && stream.active ?
                     <video ref={videoRef} autoPlay muted className='w-full h-[180px]' />
                     :
                     <div className='w-full h-[180px] bg-gray-600 flex justify-center items-center'>

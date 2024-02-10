@@ -16,15 +16,25 @@ export default function Page({ params }: { params: { id: string } }) {
             ws.emit('join-room', { roomId: id, peerId: me.id, userName: localStorage.getItem('userName') ?? userName })
         })
     }, [id, me, ws]);
-    
+
     return (
         <>
             {join ?
                 <div className='space-y-2 p-2 relative w-[150px]'>
-                    {stream && <Video stream={stream} me={true} />}
+                    {stream ?
+                        <>
+                            <Video stream={stream} me={true} />
+                            <p>{localStorage.getItem('userName') + '(me)' ?? ''}</p>
+
+                        </>
+                        : null}
+
                     {peers ? (
                         Object.values(peers).map((peer: any) => (
-                            <Video stream={peer.stream} key={peer.id} />
+                            <>
+                                <Video stream={peer.stream} key={peer.id} />
+                                <p>{peer.userName}</p>
+                            </>
                         ))
                     ) : (
                         <p>Hi</p>

@@ -19,7 +19,7 @@ export default function Configuration() {
                 </div>}
                 <button className="relative w-[60px] h-[60px] bg-slate-300 shadow-sm rounded-full flex justify-center items-center" disabled={messageMicrophone == 'not_exist'} onClick={() => setMicroPhoneEnabled((prev) => !prev)} >
                     {/* line close and open microphone */}
-                    {!microPhoneEnabled &&
+                    {microPhoneEnabled &&
                         <div className='absolute w-1 h-5/6 bg-red-600 -rotate-45'></div>
                     }
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

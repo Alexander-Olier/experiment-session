@@ -37,7 +37,7 @@ export default function Video({ stream, me, microphone }: Props) {
                 me ?
                     <div className='w-full bg-slate-500 flex items-center p-2'>
                         <button className='p-1 shadow-lg rounded-full bg-slate-700 text-white relative flex justify-center items-center' onClick={() => setMicroPhoneEnabled((prev) => !prev)}>
-                            {!microPhoneEnabled ?
+                            {microPhoneEnabled ?
                                 <div className='absolute w-0.5 h-5/6 bg-red-600 -rotate-45'></div>
                                 : null
                             }                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

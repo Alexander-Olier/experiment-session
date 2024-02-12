@@ -34,17 +34,17 @@ export const RoomProvider = ({ children }: Props) => {
     const router = useRouter();
     const [me, setMe] = useState<Peer | null>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
-    const [microPhoneEnabled, setMicroPhoneEnabled] = useState<boolean>(true);
-    const [videoEnabled, setVideoEnabled] = useState<boolean>(true);
+    const [microPhoneEnabled, setMicroPhoneEnabled] = useState<boolean>(false);
+    const [videoEnabled, setVideoEnabled] = useState<boolean>(false);
     const [peers, dispatch] = useReducer(peersReducer, {});
     const storageUserName = localStorage.getItem('userName');
     const [userName, setUserName] = useState<string>(storageUserName ?? '');
     const [join, setJoin] = useState<boolean>(false);
 
-    async function media(audio: boolean, video: boolean) {
+    async function media() {
         try {
             await navigator.mediaDevices.getUserMedia({
-                audio,
+                audio:true,
                 video: false
             }).then(stream => {
                 setStream(stream);
@@ -78,7 +78,7 @@ export const RoomProvider = ({ children }: Props) => {
         peer.connect(id);
         localStorage.setItem('userId', id);
         setMe(peer);
-        media(microPhoneEnabled, videoEnabled);
+        media();
         ws.on('room-created', enterRoom)
         ws.on('get-users', handleUserList)
         ws.on('user-disconnected', removePeer);

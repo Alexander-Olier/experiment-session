@@ -31,7 +31,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <div className='space-y-2 p-2 relative w-[150px]'>
                     {stream ?
                         <>
-                            <Video stream={stream} me={true} microphone={false} />
+                            <Video stream={stream} me={true} microphone={true} />
                             <p>{localStorage.getItem('userName') + '(me)' ?? ''}</p>
                         </>
                         : null}
@@ -39,7 +39,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     {peers ? (
                         Object.values(peers).map((peer:any) => (
                             <>
-                                <Video stream={peer.stream} key={peer.id} microphone={!peer.microPhoneEnabled} />
+                                <Video stream={peer.stream} key={peer.id} microphone={peer.microPhoneEnabled} />
                                 <p>{peer.userName}</p>
                             </>
                         ))

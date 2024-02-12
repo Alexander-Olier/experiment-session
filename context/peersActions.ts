@@ -1,6 +1,7 @@
 export const ADD_PEER_STREAM = "ADD_PEER_STREAM" as const;
 export const REMOVE_PEER_STREAM = "REMOVE_PEER_STREAM" as const;
 export const ADD_PEER_NAME = 'ADD_PEER_NAME' as const;
+export const STATUS_PEER_MICROPHONE = 'STATUS_PEER_MICROPHONE' as const;
 export const addPeerStreamAction = (peerId: string, stream: MediaStream) => ({
     type: ADD_PEER_STREAM,
     payload: { peerId, stream },
@@ -13,3 +14,8 @@ export const removePeerStreamAction = (peerId: string) => ({
     type: REMOVE_PEER_STREAM,
     payload: { peerId },
 });
+
+export const addPeerMicrophoneAction = (peerId: string, microPhoneEnabled: boolean) => ({
+    type: STATUS_PEER_MICROPHONE,
+    payload: { peerId, microPhoneEnabled },
+})

@@ -15,7 +15,7 @@ export default function Index() {
             <div className="w-[709px] bg-gray-100 rounded-lg shadow-lg p-4 space-y-4">
                 {/* video */}
                 <div className="relative w-full">
-                    {stream && <Video stream={stream} />}
+                    {stream && <Video stream={stream} microphone={false} />}
                     {/* configuration */}
                 </div>
                 <TextInput placeholder='Name' value={userName} onChange={(e) => setUserName(e.target.value)} />

@@ -4,7 +4,7 @@ import Peer from "peerjs";
 import socketIOClient from "socket.io-client";
 import { useRouter } from 'next/navigation'
 import { peersReducer } from "./peersReducer";
-import { addPeerNameAction, addPeerStreamAction, removePeerStreamAction } from "./peersActions";
+import { addPeerMicrophoneAction, addPeerNameAction, addPeerStreamAction, removePeerStreamAction } from "./peersActions";
 
 const ENDPOINT = "http://localhost:8080";
 const ws = socketIOClient(ENDPOINT);
@@ -59,13 +59,12 @@ export const RoomProvider = ({ children }: Props) => {
     }
 
     const handleUserList = ({ participants }: { participants: string[] }) => {
-       participants&& participants.map((peerId) => {
+        participants && participants.length && participants.map((peerId) => {
             const call = stream && me?.call(peerId, stream);
             call?.on("stream", (userVideoStream: MediaStream) => {
                 dispatch(addPeerStreamAction(peerId, userVideoStream));
             });
         });
-        console.log(participants)
     }
 
     const removePeer = ({ peerId }: { peerId: string }) => {
@@ -82,17 +81,23 @@ export const RoomProvider = ({ children }: Props) => {
         media(microPhoneEnabled, videoEnabled);
         ws.on('room-created', enterRoom)
         ws.on('get-users', handleUserList)
-        ws.on('user-disconnected', removePeer)
+        ws.on('user-disconnected', removePeer);
+        ws.on('microphone-toggled', ({ peerId, microPhoneEnabled }) => {
+            dispatch(addPeerMicrophoneAction(peerId, microPhoneEnabled));
+            console.log(peer)
+        });
     }, []);
 
     useEffect(() => {
         if (!stream) return;
         if (!me) return;
-        ws.on('user-joined', ({ peerId, userName:name }: { roomId: string; peerId: string, userName: string }) => {
-           dispatch(addPeerNameAction(peerId, name));
+        ws.on('user-joined', ({ peerId, userName: name, microPhoneEnabled }: { roomId: string; peerId: string, userName: string, microPhoneEnabled: boolean }) => {
+            dispatch(addPeerNameAction(peerId, name));
+            dispatch(addPeerMicrophoneAction(peerId, microPhoneEnabled));
             const call = stream && me.call(peerId, stream, {
                 metadata: {
-                    userName
+                    userName,
+                    microPhoneEnabled
                 }
             });
             call.on("stream", (userVideoStream: MediaStream) => {
@@ -101,19 +106,15 @@ export const RoomProvider = ({ children }: Props) => {
         }
         );
         me.on('call', (call) => {
-            const { userName } = call.metadata;
+            const { userName, microPhoneEnabled } = call.metadata;
             dispatch(addPeerNameAction(call.peer, userName));
+            dispatch(addPeerMicrophoneAction(call.peer, microPhoneEnabled));
             call.answer(stream);
             call.on('stream', (userVideoStream) => {
                 dispatch(addPeerStreamAction(call.peer, userVideoStream))
             });
         })
-    }, [me, stream, userName])
-
-
-    // useEffect(() => {
-    //     media(microPhoneEnabled, videoEnabled);
-    // }, [microPhoneEnabled, videoEnabled])
+    }, [me, stream, userName, microPhoneEnabled])
 
     useEffect(() => {
         localStorage.setItem('userName', userName)

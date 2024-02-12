@@ -1,7 +1,12 @@
-import { ADD_PEER_NAME, ADD_PEER_STREAM, REMOVE_PEER_STREAM } from "./peersActions";
+import { ADD_PEER_NAME, ADD_PEER_STREAM, REMOVE_PEER_STREAM, STATUS_PEER_MICROPHONE } from "./peersActions";
 
 export const initialState = {};
-export type PeerState = Record<string, { stream?: MediaStream, userName?: string }>;
+export interface PeerInterface {
+    stream: MediaStream,
+    userName: string,
+    microPhoneEnabled: boolean
+}
+export type PeerState = Record<string, { stream?: MediaStream, userName?: string, microPhoneEnabled?: boolean }>;
 type PeerAction =
     | {
         type: typeof ADD_PEER_STREAM;
@@ -14,6 +19,10 @@ type PeerAction =
     | {
         type: typeof ADD_PEER_NAME;
         payload: { peerId: string, userName: string };
+    }
+    | {
+        type: typeof STATUS_PEER_MICROPHONE;
+        payload: { peerId: string, microPhoneEnabled: boolean };
     };
 export const peersReducer = (
     state: PeerState = initialState,
@@ -34,6 +43,14 @@ export const peersReducer = (
                 [action.payload.peerId]: {
                     ...state[action.payload.peerId],
                     userName: action.payload.userName,
+                },
+            };
+        case STATUS_PEER_MICROPHONE:
+            return {
+                ...state,
+                [action.payload.peerId]: {
+                    ...state[action.payload.peerId],
+                    microPhoneEnabled: action.payload.microPhoneEnabled,
                 },
             };
         case REMOVE_PEER_STREAM:

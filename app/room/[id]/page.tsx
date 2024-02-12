@@ -14,12 +14,13 @@ export default function Page({ params }: { params: { id: string } }) {
         me?.on('open', () => {
             ws.emit('join-room', { roomId: id, peerId: me.id, userName: localStorage.getItem('userName') ?? userName, microPhoneEnabled })
         })
-    }, [id, me, ws]);
+    }, [id, me, ws, microPhoneEnabled]);
 
 
 
     useEffect(() => {
         if (!me) return;
+        if(!peers) return;
         ws.emit('toggle-microphone', { roomId: id, peerId: me.id });
     }, [id, me, ws, microPhoneEnabled])
 

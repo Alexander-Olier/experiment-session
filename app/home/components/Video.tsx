@@ -17,6 +17,12 @@ export default function Video({ stream, me, microphone }: Props) {
     }, [stream])
     return (
         <div>
+            <p>
+                {!microphone ?
+                    'active'
+                    : 'deactive'
+                }
+            </p>
             <video ref={videoRef} autoPlay className='w-full h-[180px]' muted={microphone} />
             {/* :
                     <div className='w-full h-[180px] bg-gray-600 flex justify-center items-center'>
@@ -25,11 +31,7 @@ export default function Video({ stream, me, microphone }: Props) {
                             <path d="M7.05025 16.0503C8.36301 14.7375 10.1435 14 12 14C13.8565 14 15.637 14.7375 16.9497 16.0503C18.2625 17.363 19 19.1435 19 21H5C5 19.1435 5.7375 17.363 7.05025 16.0503Z" stroke="#141A22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div> */}
-            <p>  {!microphone ?
-                'active'
-                : 'deactive'
-            }
-            </p>
+
 
             {
                 me ?
